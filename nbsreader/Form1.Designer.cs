@@ -24,21 +24,23 @@
         /// </summary>
         private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TheForm));
-            this.OpenDialog = new System.Windows.Forms.OpenFileDialog();
             this.OpenButton = new System.Windows.Forms.Button();
-            this.OutputBox = new NBSDisc.SingularityScintilla();
-            this.SplitCheck = new System.Windows.Forms.CheckBox();
-            this.ClickLabel = new System.Windows.Forms.Label();
+            this.SaveButton = new System.Windows.Forms.Button();
+            this.FileLabel = new System.Windows.Forms.Label();
+            this.DivLabel = new System.Windows.Forms.Label();
+            this.TempoInput = new System.Windows.Forms.NumericUpDown();
+            this.BpsLabel = new System.Windows.Forms.Label();
+            this.BpsPanel = new System.Windows.Forms.Panel();
+            this.QuickInstallBox = new System.Windows.Forms.TextBox();
+            this.CopyCommandButton = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.TempoInput)).BeginInit();
+            this.BpsPanel.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // openNbs
-            // 
-            this.OpenDialog.Filter = "Note Block Songs|*.nbs";
             // 
             // OpenButton
             // 
             this.OpenButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
-            this.OpenButton.Location = new System.Drawing.Point(7, 13);
+            this.OpenButton.Location = new System.Drawing.Point(7, 9);
             this.OpenButton.Margin = new System.Windows.Forms.Padding(4);
             this.OpenButton.Name = "OpenButton";
             this.OpenButton.Size = new System.Drawing.Size(240, 78);
@@ -47,74 +49,139 @@
             this.OpenButton.UseVisualStyleBackColor = true;
             this.OpenButton.Click += new System.EventHandler(this.OpenButton_Click);
             // 
-            // OutputBox
+            // SaveButton
             // 
-            this.OutputBox.AdditionalSelectionTyping = true;
-            this.OutputBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.OutputBox.AutoResize = NBSDisc.ResizeMode.None;
-            this.OutputBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.OutputBox.Enabled = false;
-            this.OutputBox.Font = new System.Drawing.Font("Consolas", 16F);
-            this.OutputBox.Location = new System.Drawing.Point(7, 100);
-            this.OutputBox.Margin = new System.Windows.Forms.Padding(4);
-            this.OutputBox.Multiline = true;
-            this.OutputBox.MultiPaste = ScintillaNET.MultiPaste.Each;
-            this.OutputBox.Name = "OutputBox";
-            this.OutputBox.ScrollWidth = 1;
-            this.OutputBox.Size = new System.Drawing.Size(1024, 517);
-            this.OutputBox.TabIndex = 1;
-            this.OutputBox.VirtualSpaceOptions = ScintillaNET.VirtualSpace.RectangularSelection;
-            this.OutputBox.Watermark = "";
+            this.SaveButton.Enabled = false;
+            this.SaveButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
+            this.SaveButton.Location = new System.Drawing.Point(7, 95);
+            this.SaveButton.Margin = new System.Windows.Forms.Padding(4);
+            this.SaveButton.Name = "SaveButton";
+            this.SaveButton.Size = new System.Drawing.Size(240, 78);
+            this.SaveButton.TabIndex = 1;
+            this.SaveButton.Text = "Save Functions";
+            this.SaveButton.UseVisualStyleBackColor = true;
+            this.SaveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
-            // SplitCheck
+            // FileLabel
             // 
-            this.SplitCheck.AutoSize = true;
-            this.SplitCheck.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.SplitCheck.Location = new System.Drawing.Point(254, 13);
-            this.SplitCheck.Name = "SplitCheck";
-            this.SplitCheck.Size = new System.Drawing.Size(365, 29);
-            this.SplitCheck.TabIndex = 2;
-            this.SplitCheck.Text = "Using command blocks (not functions)";
-            this.SplitCheck.UseVisualStyleBackColor = true;
+            this.FileLabel.AutoSize = true;
+            this.FileLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
+            this.FileLabel.Location = new System.Drawing.Point(254, 9);
+            this.FileLabel.Name = "FileLabel";
+            this.FileLabel.Size = new System.Drawing.Size(0, 29);
+            this.FileLabel.TabIndex = 2;
             // 
-            // ClickLabel
+            // DivLabel
             // 
-            this.ClickLabel.AutoSize = true;
-            this.ClickLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
-            this.ClickLabel.Location = new System.Drawing.Point(254, 66);
-            this.ClickLabel.Name = "ClickLabel";
-            this.ClickLabel.Size = new System.Drawing.Size(248, 25);
-            this.ClickLabel.TabIndex = 3;
-            this.ClickLabel.Text = "Triple-click a line to select it";
-            this.ClickLabel.Visible = false;
+            this.DivLabel.AutoSize = true;
+            this.DivLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
+            this.DivLabel.Location = new System.Drawing.Point(5, 5);
+            this.DivLabel.Name = "DivLabel";
+            this.DivLabel.Size = new System.Drawing.Size(59, 29);
+            this.DivLabel.TabIndex = 3;
+            this.DivLabel.Text = "20 ÷";
             // 
-            // Form1
+            // TempoInput
+            // 
+            this.TempoInput.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
+            this.TempoInput.Location = new System.Drawing.Point(10, 34);
+            this.TempoInput.Maximum = new decimal(new int[] {
+            99,
+            0,
+            0,
+            0});
+            this.TempoInput.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.TempoInput.Name = "TempoInput";
+            this.TempoInput.Size = new System.Drawing.Size(62, 34);
+            this.TempoInput.TabIndex = 4;
+            this.TempoInput.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.TempoInput.ValueChanged += new System.EventHandler(this.TempoInput_ValueChanged);
+            // 
+            // BpsLabel
+            // 
+            this.BpsLabel.AutoSize = true;
+            this.BpsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
+            this.BpsLabel.Location = new System.Drawing.Point(78, 37);
+            this.BpsLabel.Name = "BpsLabel";
+            this.BpsLabel.Size = new System.Drawing.Size(105, 29);
+            this.BpsLabel.TabIndex = 5;
+            this.BpsLabel.Text = "= 20 bps";
+            // 
+            // BpsPanel
+            // 
+            this.BpsPanel.Controls.Add(this.BpsLabel);
+            this.BpsPanel.Controls.Add(this.DivLabel);
+            this.BpsPanel.Controls.Add(this.TempoInput);
+            this.BpsPanel.Location = new System.Drawing.Point(259, 95);
+            this.BpsPanel.Name = "BpsPanel";
+            this.BpsPanel.Size = new System.Drawing.Size(200, 78);
+            this.BpsPanel.TabIndex = 6;
+            this.BpsPanel.Visible = false;
+            // 
+            // QuickInstallBox
+            // 
+            this.QuickInstallBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F);
+            this.QuickInstallBox.Location = new System.Drawing.Point(259, 179);
+            this.QuickInstallBox.Multiline = true;
+            this.QuickInstallBox.Name = "QuickInstallBox";
+            this.QuickInstallBox.Size = new System.Drawing.Size(339, 58);
+            this.QuickInstallBox.TabIndex = 7;
+            this.QuickInstallBox.Visible = false;
+            // 
+            // CopyCommandButton
+            // 
+            this.CopyCommandButton.Enabled = false;
+            this.CopyCommandButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
+            this.CopyCommandButton.Location = new System.Drawing.Point(7, 180);
+            this.CopyCommandButton.Name = "CopyCommandButton";
+            this.CopyCommandButton.Size = new System.Drawing.Size(240, 58);
+            this.CopyCommandButton.TabIndex = 8;
+            this.CopyCommandButton.Text = "Copy Command";
+            this.CopyCommandButton.UseVisualStyleBackColor = true;
+            this.CopyCommandButton.Click += new System.EventHandler(this.CopyCommandButton_Click);
+            // 
+            // TheForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1040, 625);
-            this.Controls.Add(this.ClickLabel);
-            this.Controls.Add(this.SplitCheck);
-            this.Controls.Add(this.OutputBox);
+            this.ClientSize = new System.Drawing.Size(610, 250);
+            this.Controls.Add(this.CopyCommandButton);
+            this.Controls.Add(this.QuickInstallBox);
+            this.Controls.Add(this.BpsPanel);
+            this.Controls.Add(this.FileLabel);
+            this.Controls.Add(this.SaveButton);
             this.Controls.Add(this.OpenButton);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "Form1";
+            this.Name = "TheForm";
             this.Text = "NBS to Disc";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TheForm_FormClosed);
+            ((System.ComponentModel.ISupportInitialize)(this.TempoInput)).EndInit();
+            this.BpsPanel.ResumeLayout(false);
+            this.BpsPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.OpenFileDialog OpenDialog;
         private System.Windows.Forms.Button OpenButton;
-        private SingularityScintilla OutputBox;
-        private System.Windows.Forms.CheckBox SplitCheck;
-        private System.Windows.Forms.Label ClickLabel;
+        private System.Windows.Forms.Button SaveButton;
+        private System.Windows.Forms.Label FileLabel;
+        private System.Windows.Forms.Label DivLabel;
+        private System.Windows.Forms.NumericUpDown TempoInput;
+        private System.Windows.Forms.Label BpsLabel;
+        private System.Windows.Forms.Panel BpsPanel;
+        private System.Windows.Forms.TextBox QuickInstallBox;
+        private System.Windows.Forms.Button CopyCommandButton;
     }
 }
 
