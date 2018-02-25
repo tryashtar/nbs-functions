@@ -27,14 +27,16 @@
             this.OpenButton = new System.Windows.Forms.Button();
             this.SaveButton = new System.Windows.Forms.Button();
             this.FileLabel = new System.Windows.Forms.Label();
-            this.DivLabel = new System.Windows.Forms.Label();
-            this.TempoInput = new System.Windows.Forms.NumericUpDown();
             this.BpsLabel = new System.Windows.Forms.Label();
             this.BpsPanel = new System.Windows.Forms.Panel();
+            this.FunctionInput = new System.Windows.Forms.NumericUpDown();
+            this.FunctionLabel = new System.Windows.Forms.Label();
+            this.BpsInput = new System.Windows.Forms.NumericUpDown();
             this.QuickInstallBox = new System.Windows.Forms.TextBox();
             this.CopyCommandButton = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.TempoInput)).BeginInit();
             this.BpsPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.FunctionInput)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.BpsInput)).BeginInit();
             this.SuspendLayout();
             // 
             // OpenButton
@@ -71,60 +73,77 @@
             this.FileLabel.Size = new System.Drawing.Size(0, 29);
             this.FileLabel.TabIndex = 2;
             // 
-            // DivLabel
-            // 
-            this.DivLabel.AutoSize = true;
-            this.DivLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
-            this.DivLabel.Location = new System.Drawing.Point(5, 5);
-            this.DivLabel.Name = "DivLabel";
-            this.DivLabel.Size = new System.Drawing.Size(59, 29);
-            this.DivLabel.TabIndex = 3;
-            this.DivLabel.Text = "20 ÷";
-            // 
-            // TempoInput
-            // 
-            this.TempoInput.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
-            this.TempoInput.Location = new System.Drawing.Point(10, 34);
-            this.TempoInput.Maximum = new decimal(new int[] {
-            99,
-            0,
-            0,
-            0});
-            this.TempoInput.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.TempoInput.Name = "TempoInput";
-            this.TempoInput.Size = new System.Drawing.Size(62, 34);
-            this.TempoInput.TabIndex = 4;
-            this.TempoInput.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.TempoInput.ValueChanged += new System.EventHandler(this.TempoInput_ValueChanged);
-            // 
             // BpsLabel
             // 
             this.BpsLabel.AutoSize = true;
             this.BpsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
-            this.BpsLabel.Location = new System.Drawing.Point(78, 37);
+            this.BpsLabel.Location = new System.Drawing.Point(33, 8);
             this.BpsLabel.Name = "BpsLabel";
-            this.BpsLabel.Size = new System.Drawing.Size(105, 29);
+            this.BpsLabel.Size = new System.Drawing.Size(53, 29);
             this.BpsLabel.TabIndex = 5;
-            this.BpsLabel.Text = "= 20 bps";
+            this.BpsLabel.Text = "bps";
             // 
             // BpsPanel
             // 
+            this.BpsPanel.Controls.Add(this.FunctionInput);
+            this.BpsPanel.Controls.Add(this.FunctionLabel);
+            this.BpsPanel.Controls.Add(this.BpsInput);
             this.BpsPanel.Controls.Add(this.BpsLabel);
-            this.BpsPanel.Controls.Add(this.DivLabel);
-            this.BpsPanel.Controls.Add(this.TempoInput);
-            this.BpsPanel.Location = new System.Drawing.Point(259, 95);
+            this.BpsPanel.Location = new System.Drawing.Point(259, 81);
             this.BpsPanel.Name = "BpsPanel";
-            this.BpsPanel.Size = new System.Drawing.Size(200, 78);
+            this.BpsPanel.Size = new System.Drawing.Size(438, 92);
             this.BpsPanel.TabIndex = 6;
             this.BpsPanel.Visible = false;
+            // 
+            // FunctionInput
+            // 
+            this.FunctionInput.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
+            this.FunctionInput.Location = new System.Drawing.Point(3, 47);
+            this.FunctionInput.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.FunctionInput.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.FunctionInput.Name = "FunctionInput";
+            this.FunctionInput.ReadOnly = true;
+            this.FunctionInput.Size = new System.Drawing.Size(24, 38);
+            this.FunctionInput.TabIndex = 8;
+            this.FunctionInput.ValueChanged += new System.EventHandler(this.FunctionInput_ValueChanged);
+            // 
+            // FunctionLabel
+            // 
+            this.FunctionLabel.AutoSize = true;
+            this.FunctionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
+            this.FunctionLabel.Location = new System.Drawing.Point(33, 52);
+            this.FunctionLabel.Name = "FunctionLabel";
+            this.FunctionLabel.Size = new System.Drawing.Size(108, 29);
+            this.FunctionLabel.TabIndex = 7;
+            this.FunctionLabel.Text = "functions";
+            // 
+            // BpsInput
+            // 
+            this.BpsInput.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F);
+            this.BpsInput.Location = new System.Drawing.Point(3, 3);
+            this.BpsInput.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.BpsInput.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            -2147483648});
+            this.BpsInput.Name = "BpsInput";
+            this.BpsInput.ReadOnly = true;
+            this.BpsInput.Size = new System.Drawing.Size(24, 38);
+            this.BpsInput.TabIndex = 6;
+            this.BpsInput.ValueChanged += new System.EventHandler(this.BpsInput_ValueChanged);
             // 
             // QuickInstallBox
             // 
@@ -132,7 +151,7 @@
             this.QuickInstallBox.Location = new System.Drawing.Point(259, 179);
             this.QuickInstallBox.Multiline = true;
             this.QuickInstallBox.Name = "QuickInstallBox";
-            this.QuickInstallBox.Size = new System.Drawing.Size(339, 58);
+            this.QuickInstallBox.Size = new System.Drawing.Size(438, 58);
             this.QuickInstallBox.TabIndex = 7;
             this.QuickInstallBox.Visible = false;
             // 
@@ -152,7 +171,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(610, 250);
+            this.ClientSize = new System.Drawing.Size(709, 250);
             this.Controls.Add(this.CopyCommandButton);
             this.Controls.Add(this.QuickInstallBox);
             this.Controls.Add(this.BpsPanel);
@@ -164,9 +183,11 @@
             this.Name = "TheForm";
             this.Text = "NBS to Disc";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TheForm_FormClosed);
-            ((System.ComponentModel.ISupportInitialize)(this.TempoInput)).EndInit();
+            this.Load += new System.EventHandler(this.TheForm_Load);
             this.BpsPanel.ResumeLayout(false);
             this.BpsPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.FunctionInput)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.BpsInput)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -176,12 +197,13 @@
         private System.Windows.Forms.Button OpenButton;
         private System.Windows.Forms.Button SaveButton;
         private System.Windows.Forms.Label FileLabel;
-        private System.Windows.Forms.Label DivLabel;
-        private System.Windows.Forms.NumericUpDown TempoInput;
         private System.Windows.Forms.Label BpsLabel;
         private System.Windows.Forms.Panel BpsPanel;
         private System.Windows.Forms.TextBox QuickInstallBox;
         private System.Windows.Forms.Button CopyCommandButton;
+        private System.Windows.Forms.NumericUpDown BpsInput;
+        private System.Windows.Forms.NumericUpDown FunctionInput;
+        private System.Windows.Forms.Label FunctionLabel;
     }
 }
 

@@ -10,10 +10,27 @@ namespace NBSDisc
 {
     public partial class TheForm : Form
     {
+        private int TicksPerBeat = 1;
+        private int BeatsPerFunction = 1;
         private NbsFile LoadedFile;
         public TheForm()
         {
             InitializeComponent();
+        }
+
+        private void SetTicksPerBeat(int value)
+        {
+            TicksPerBeat = value;
+            BpsLabel.Text = Math.Round(1200d / TicksPerBeat, 1) + " BPM";
+        }
+
+        private void SetBeatsPerFunction(int value)
+        {
+            BeatsPerFunction = value;
+            if (LoadedFile == null)
+                FunctionLabel.Text = "";
+            else
+                FunctionLabel.Text = "×" + BeatsPerFunction + " runtime, " + (LoadedFile.Noteblocks.Last().Tick / BeatsPerFunction) + " functions";
         }
 
         private void OpenButton_Click(object sender, EventArgs e)
@@ -25,7 +42,8 @@ namespace NBSDisc
             if (open.ShowDialog() == DialogResult.OK)
             {
                 LoadedFile = new NbsFile(open.FileName);
-                TempoInput.Value = (int)(20 / LoadedFile.Tempo);
+                SetTicksPerBeat((int)(20 / LoadedFile.Tempo));
+                SetBeatsPerFunction(BeatsPerFunction);
                 SaveButton.Enabled = true;
                 BpsPanel.Visible = true;
                 FileLabel.Text = Path.GetFileNameWithoutExtension(open.FileName);
@@ -41,35 +59,73 @@ namespace NBSDisc
             save.InitialDirectory = Properties.Settings.Default.ExportPath;
             if (save.ShowDialog() == DialogResult.OK)
             {
-                SaveFunctions(LoadedFile, (int)TempoInput.Value, save.FileName);
+                string setup = SaveFunctions(LoadedFile, TicksPerBeat, BeatsPerFunction, save.FileName);
                 Properties.Settings.Default.ExportPath = Path.GetDirectoryName(save.FileName);
                 CopyCommandButton.Enabled = true;
                 QuickInstallBox.Visible = true;
                 string nspace = Path.GetFileNameWithoutExtension(save.FileName);
-                QuickInstallBox.Text = "/give @p command_block{BlockEntityTag:{auto:1b,Command:\"function " + nspace + ":setup\"}}";
+                QuickInstallBox.Text = setup;
             }
         }
 
-        private static void SaveFunctions(NbsFile nbs, int tempoticks, string functionspath)
+        // TO DO: save depending on where where the user is
+        // * (random folder)
+        // * (world)
+        // * /datapacks
+        // * /(some pack)
+        // * /data
+        // * /(namespace)
+        // * /functions
+        // * /further folders...
+        // returns "setup" command
+        private static string SaveFunctions(NbsFile nbs, int ticksperbeat, int beatsperfunction, string functionspath)
         {
             string nspace = Path.GetFileNameWithoutExtension(functionspath);
             Directory.CreateDirectory(Path.Combine(functionspath, "functions"));
-            string[] functions = new string[nbs.Noteblocks.Last().Tick + 1];
+            string[] functions = new string[(nbs.Noteblocks.Last().Tick / beatsperfunction) + 1];
             foreach (var block in nbs.Noteblocks)
             {
-                functions[block.Tick] += $"execute as @a at @s run playsound {GetInstrumentName(block.Instrument)} record @s ~ ~ ~ 1 {GetPitchValue(block.Key)}\n";
+                string play = $" as @a at @s run playsound " +
+                    $"{GetInstrumentName(block.Instrument)} record @s ~ ~ ~ 1 {GetPitchValue(block.Key)}\n";
+                if (beatsperfunction > 1)
+                    play = " if score #" + nspace + "2 nbsmusic matches " + (block.Tick % beatsperfunction) + play;
+                functions[block.Tick / beatsperfunction] += "execute" + play;
             }
             for (int i = 0; i < functions.Length; i++)
             {
+                if (beatsperfunction > 1)
+                    functions[i] += "execute if score #" + nspace + "2 nbsmusic matches " + (beatsperfunction - 1) + " run ";
                 functions[i] += "data merge block ~ ~ ~ {Command:\"function " + nspace + ":" + (i + 1) + "\"}";
                 File.WriteAllText(Path.Combine(functionspath, "functions", i + ".mcfunction"), functions[i]);
             }
-            string setup;
-            if (tempoticks == 1)
-                setup = "setblock ~ ~ ~ repeating_command_block{Command:\"function " + nspace + ":0\"}";
+            StringBuilder setup = new StringBuilder();
+            if (beatsperfunction > 1 || ticksperbeat > 1)
+                setup.AppendLine("scoreboard objectives add nbsmusic dummy");
+            if (ticksperbeat == 1)
+            {
+                if (beatsperfunction > 1)
+                {
+                    setup.AppendLine("setblock ~ ~ ~ repeating_command_block{Command:\"scoreboard players add #" + nspace + "2 nbsmusic 1\"}");
+                    setup.AppendLine("setblock ~ ~ ~-1 chain_command_block[conditional=true]{auto:1b,Command:\"execute if score #" + nspace + "2 nbsmusic matches " + beatsperfunction + ".. run scoreboard players set #" + nspace + "2 nbsmusic 0\"");
+                    setup.AppendLine("setblock ~ ~ ~-2 chain_command_block{auto:1b,Command:\"function " + nspace + ":0\"}");
+                }
+                else
+                    setup.AppendLine("setblock ~ ~ ~ repeating_command_block{Command:\"function " + nspace + ":0\"}");
+            }
             else
-                setup = "fill ~ ~ ~ ~ ~ ~ air replace command_block{Command:\"function "+nspace+":setup\"}\nscoreboard objectives add nbsmusic dummy\nsetblock ~ ~ ~-1 repeating_command_block{Command:\"scoreboard players add #" + nspace + " nbsmusic 1\"}\nsetblock ~ ~ ~-2 chain_command_block{auto:1b,Command:\"execute if score #" + nspace + " nbsmusic matches " + (tempoticks+1) + ".. run scoreboard players set #" + nspace + " nbsmusic 1\"}\nsetblock ~ ~ ~-3 chain_command_block[conditional=true]{auto:1b,Command:\"function " + nspace + ":0\"}";
-            File.WriteAllText(Path.Combine(functionspath, "functions", "setup.mcfunction"), setup);
+            {
+                setup.AppendLine("setblock ~ ~ ~ repeating_command_block{Command:\"scoreboard players add #" + nspace + "1 nbsmusic 1\"}");
+                setup.AppendLine("setblock ~ ~ ~-1 chain_command_block{auto:1b,Command:\"execute if score #" + nspace + "1 nbsmusic matches " + ticksperbeat + ".. run scoreboard players set #" + nspace + "1 nbsmusic 0\"}");
+                setup.AppendLine("setblock ~ ~ ~-2 chain_command_block[conditional=true]{auto:1b,Command:\"function " + nspace + ":0\"}");
+                if (beatsperfunction > 1)
+                {
+                    setup.AppendLine("setblock ~ ~ ~-3 chain_command_block[conditional=true]{auto:1b,Command:\"scoreboard players add #" + nspace + "2 nbsmusic 1\"}");
+                    setup.AppendLine("setblock ~ ~ ~-4 chain_command_block[conditional=true]{auto:1b,Command:\"execute if score #" + nspace + "2 nbsmusic matches " + beatsperfunction + ".. run scoreboard players set #" + nspace + "2 nbsmusic 0\"}");
+                }
+            }
+            setup.AppendLine("setblock ~ ~1 ~ lever[face=floor]");
+            File.WriteAllText(Path.Combine(functionspath, "functions", "setup.mcfunction"), setup.ToString());
+            return "/give @p command_block{BlockEntityTag:{auto:1b,Command:\"function " + nspace + ":setup\"}}";
         }
 
         private static string GetInstrumentName(byte input)
@@ -111,14 +167,42 @@ namespace NBSDisc
             Properties.Settings.Default.Save();
         }
 
-        private void TempoInput_ValueChanged(object sender, EventArgs e)
-        {
-            BpsLabel.Text = "= " + Math.Round(20 / TempoInput.Value, 1) + " bps";
-        }
-
         private void CopyCommandButton_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(QuickInstallBox.Text);
+        }
+
+        private void BpsInput_ValueChanged(object sender, EventArgs e)
+        {
+            if (BpsInput.Value < 0)
+            {
+                SetTicksPerBeat(Math.Min(TicksPerBeat + 1, 100));
+                BpsInput.Value = 0;
+            }
+            if (BpsInput.Value > 0)
+            {
+                SetTicksPerBeat(Math.Max(TicksPerBeat - 1, 1));
+                BpsInput.Value = 0;
+            }
+        }
+
+        private void FunctionInput_ValueChanged(object sender, EventArgs e)
+        {
+            if (FunctionInput.Value < 0)
+            {
+                SetBeatsPerFunction(Math.Max(BeatsPerFunction - 1, 1));
+                FunctionInput.Value = 0;
+            }
+            if (FunctionInput.Value > 0)
+            {
+                SetBeatsPerFunction(Math.Min(BeatsPerFunction + 1, 100));
+                FunctionInput.Value = 0;
+            }
+        }
+
+        private void TheForm_Load(object sender, EventArgs e)
+        {
+            SetBeatsPerFunction(1);
         }
     }
 
