@@ -45,7 +45,7 @@ namespace NBSDisc
         {
             string nspace = Path.GetFileNameWithoutExtension(functionspath);
             Directory.CreateDirectory(Path.Combine(functionspath, "functions"));
-            
+
             // create the list of functions
             string[] functions = new string[(nbs.Noteblocks.Last().Tick / beatsperfunction) + 1];
 
@@ -123,7 +123,7 @@ namespace NBSDisc
                 result += " chain_command_block{auto:1b,";
             else if (cblock == CommandBlockType.ConditionalChain)
                 result += " chain_command_block[conditional=true]{auto:1b,";
-            
+
             // logically we should escape the command, but in practice that isn't ever necessary here
             return result + "Command:\"" + command + "\"}";
         }
@@ -177,7 +177,15 @@ namespace NBSDisc
             open.InitialDirectory = Properties.Settings.Default.OpenPath;
             if (open.ShowDialog() == DialogResult.OK)
             {
-                LoadedFile = new NbsFile(open.FileName);
+                try
+                {
+                    LoadedFile = new NbsFile(open.FileName, true);
+                }
+                catch (IndexOutOfRangeException ex)
+                {
+                    MessageBox.Show("That NBS file is not compatible with vanilla because of one or more of its notes.\n\n"+ex.Message,"Bad NBS file!");
+                    return;
+                }
                 SetTicksPerBeat((int)(20 / LoadedFile.Tempo));
                 SetBeatsPerFunction(BeatsPerFunction);
                 SaveButton.Enabled = true;
@@ -279,7 +287,8 @@ namespace NBSDisc
         public readonly string Description;
         public readonly double Tempo;
         public readonly List<NoteBlock> Noteblocks = new List<NoteBlock>();
-        public NbsFile(string path)
+        // if "vanilla" is set, this will throw an exception if it encounters custom notes or out-of-range pitches
+        public NbsFile(string path, bool vanilla)
         {
             FileStream fs = File.OpenRead(path);
             BinaryReader br = new BinaryReader(fs);
@@ -318,7 +327,11 @@ namespace NBSDisc
                         break;
                     layer += jumps;
                     byte inst = br.ReadByte();
+                    if (vanilla && !(inst >= 0 && inst <= 9))
+                        throw new IndexOutOfRangeException($"Custom instrument detected with ID {inst} on note #{Noteblocks.Count + 1}");
                     byte key = br.ReadByte();
+                    if (vanilla && !(key >= 33 && key <= 57))
+                        throw new IndexOutOfRangeException($"Out-of-range pitch detected with ID {key} on note #{Noteblocks.Count + 1}");
                     Noteblocks.Add(new NoteBlock(tick, layer, inst, key));
                 }
             }
