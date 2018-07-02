@@ -10,7 +10,7 @@ You can increase or decrease the BPM, which will default to whatever it was in t
 
 You can also increase or decrease the number of functions to generate. The fewer functions you have, the more commands will be forced to run every tick. Maximum function count means it runs exactly one command for each note in a given tick. Since functions are cheap (especially when zipped in a data pack), I recommend leaving the function count high.
 
-Click `Save Functions` and browse to your existing data pack, inside `(world)/datapcks/(your pack)/data`. Type any lowercase word in the box and save. All the function files will be saved to this data pack.
+Click `Save Functions` and browse to your existing data pack, inside `(world)/datapacks/(your pack)/data`. Type any lowercase word in the box and save. All the function files will be saved to this data pack.
 
 Click `Copy Command` and a command will be copied to your clipboard. Enter Minecraft and paste the command into chat. Press enter and you will receive a command block. Placing that command block will create a chain of one or more command blocks. The song will play while the blue one is receiving power.
 
@@ -25,4 +25,4 @@ Because if you're using a resource pack, this entire application serves no purpo
 
 > How do I make a data pack?
 
-In the future, I'd like this application to automatically create a data pack for you if you simply choose to save in your world. Until then, a data pack goes world's `datapacks` folder. Create a folder with any name, then create a folder called `data` inside of that. Also create a file called `pack.mcmeta` with these contents: `{"pack":{"pack_format":1,"description": "NBS"}}`.
+In the future, I'd like this application to automatically create a data pack for you if you simply choose to save in your world. Until then, a data pack goes world's `datapacks` folder. Create a folder with any name, then create a folder called `data` inside of that. Also create a file called `pack.mcmeta` with these contents: `{"pack":{"pack_format":1,"description":"NBS"}}`.
