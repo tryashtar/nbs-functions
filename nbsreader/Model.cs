@@ -33,25 +33,37 @@ namespace NBSDisc
             switch (Instrument)
             {
                 case 0:
-                    return "block.note.harp";
+                    return "block.note_block.harp";
                 case 1:
-                    return "block.note.bass";
+                    return "block.note_block.bass";
                 case 2:
-                    return "block.note.basedrum";
+                    return "block.note_block.basedrum";
                 case 3:
-                    return "block.note.snare";
+                    return "block.note_block.snare";
                 case 4:
-                    return "block.note.hat";
+                    return "block.note_block.hat";
                 case 5:
-                    return "block.note.guitar";
+                    return "block.note_block.guitar";
                 case 6:
-                    return "block.note.flute";
+                    return "block.note_block.flute";
                 case 7:
-                    return "block.note.bell";
+                    return "block.note_block.bell";
                 case 8:
-                    return "block.note.chime";
+                    return "block.note_block.chime";
                 case 9:
-                    return "block.note.xylophone";
+                    return "block.note_block.xylophone";
+                case 10:
+                    return "block.note_block.iron_xylophone";
+                case 11:
+                    return "block.note_block.cow_bell";
+                case 12:
+                    return "block.note_block.didgeridoo";
+                case 13:
+                    return "block.note_block.bit";
+                case 14:
+                    return "block.note_block.banjo";
+                case 15:
+                    return "block.note_block.pling";
                 default:
                     throw new InvalidOperationException($"No such instrument ID {Instrument}");
             }
@@ -108,7 +120,7 @@ namespace NBSDisc
                         break;
                     layer += jumps;
                     byte inst = br.ReadByte();
-                    if (vanilla && !(inst >= 0 && inst <= 9))
+                    if (vanilla && !(inst >= 0 && inst <= 15))
                         throw new IndexOutOfRangeException($"Custom instrument detected with ID {inst} on note #{Noteblocks.Count + 1}");
                     byte key = br.ReadByte();
                     if (vanilla && !(key >= 33 && key <= 57))
